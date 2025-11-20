@@ -204,6 +204,7 @@ GROUP BY Birthyear;
 
 
 -- Q5) Working Employee Birthday Month
+
 WITH table1 AS (
     SELECT * FROM hr_database.hr_table
     WHERE termdate IS NOT NULL
@@ -253,6 +254,7 @@ ON table2.num1 = table3.num2
 
 
 -- Q7) Male & Female Contribution in Total Salary by Month
+
 USE hr_database;
 SELECT 
 Month,
@@ -289,7 +291,9 @@ ON table2.num1 = table3.num2;
 
 SELECT * FROM hr_database.hr_table;
 
+
 -- Q8) Total Salary by Year & Month
+
 USE hr_database;
 SELECT
 YEAR(hiredate) AS Year,
@@ -299,24 +303,101 @@ FROM hr_database.hr_table
 GROUP BY Year, Month
 ORDER BY Year;
 
+-- --------------------------------------------------
+-- ============================== CUMULATIVE ANALYSIS
+-- --------------------------------------------------
+
+SELECT * FROM hr_database.hr_table;
+
+-- Q1) Cumulative Hired & Terminated Employee by Year
+-- Q2) Cumulative Hire & Terminated Employee by Year & Month
 
 
+-- Q1) Cumulative Hired & Terminated Employee by Year
+
+SELECT 
+    Hire_Year AS Year,
+    Hire_Employee,
+    Cumulative_Hire_Emp,
+    Terminated_Employee,
+    Cumulative_Terminated_Emp
+FROM (
+    SELECT 
+    Hire_Year,
+    Hire_Employee,
+    SUM(Hire_Employee) OVER(ORDER BY Hire_Year) AS Cumulative_Hire_Emp
+    FROM (
+        SELECT 
+            YEAR(hiredate) AS Hire_Year,
+            COUNT(employee_id)  AS Hire_Employee
+        FROM hr_database.hr_table
+        GROUP BY Hire_Year
+        ORDER BY Hire_Year
+    ) hire_table_one
+) hire_table_two
+LEFT JOIN (
+    SELECT 
+    Terminated_Year,
+    Terminated_Employee,
+    SUM(Terminated_Employee) OVER(ORDER BY Terminated_Year) AS Cumulative_Terminated_Emp
+    FROM (
+        SELECT 
+            YEAR(termdate) AS Terminated_Year,
+            COUNT(employee_id)  AS Terminated_Employee
+        FROM hr_database.hr_table
+        GROUP BY Terminated_Year
+        HAVING Terminated_Year IS NOT NULL
+        ORDER BY Terminated_Year
+    ) term_table_one
+) term_table_two
+ON hire_table_two.Hire_Year = term_table_two.Terminated_Year
 
 
+-- Q2) Cumulative Hire & Terminated Employee by Year & Month
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT 
+    Hire_Year,
+    Hire_Month,
+    Hire_Employee,
+    Cumulative_Hire_Emp,
+    Terminated_Employee,
+    Cumulative_Terminated_Emp
+FROM (
+    SELECT 
+        CONCAT(Hire_Year, Hire_Month) AS Hire_Id,
+        Hire_Year,
+        Hire_Month,
+        Hire_Employee,
+        SUM(Hire_Employee) OVER(ORDER BY Hire_Year, Hire_Month) AS Cumulative_Hire_Emp
+    FROM (
+    SELECT 
+        YEAR(hiredate) AS Hire_Year,
+        MONTH(hiredate) AS Hire_Month,
+        COUNT(employee_id)  AS Hire_Employee
+    FROM hr_database.hr_table
+    GROUP BY Hire_Year, Hire_Month
+    ORDER BY Hire_Year
+    ) hire_table_one
+) AS hire_table_two
+LEFT JOIN (
+    SELECT 
+        CONCAT(Terminated_Year, Terminated_Month) AS Terminated_Id,
+        Terminated_Year,
+        Terminated_Month,
+        Terminated_Employee,
+        SUM(Terminated_Employee) OVER(ORDER BY Terminated_Year, Terminated_Month) AS Cumulative_Terminated_Emp
+    FROM (
+    SELECT 
+        YEAR(termdate) AS Terminated_Year,
+        MONTH(termdate) AS Terminated_Month,
+        COUNT(employee_id)  AS Terminated_Employee
+    FROM hr_database.hr_table
+    GROUP BY Terminated_Year, Terminated_Month
+    HAVING Terminated_Year IS NOT NULL
+    ORDER BY Terminated_Year
+    ) terminated_table_one
+) AS terminated_table_two
+ON hire_table_two.Hire_Id = terminated_table_two.Terminated_Id
 
 
 
