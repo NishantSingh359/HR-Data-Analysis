@@ -400,11 +400,246 @@ LEFT JOIN (
 ON hire_table_two.Hire_Id = terminated_table_two.Terminated_Id
 
 
+-- --------------------------------------------------
+-- ============================= PERFORMANCE ANALYSIS
+-- --------------------------------------------------
 
 
+-- Q1) Top Highest Payed Employes Performance
+-- Q2) Department with Employes Performance
+-- Q3) Employes Performance with Education Lavel
+-- Q4) Gender with Performance
 
 
+-- Q1) Top Highest Payed Employes Performance
+
+-- Top 10
+
+WITH highest_payed AS (
+    SELECT 
+        employee_id,
+        performance_rating
+    FROM hr_database.hr_table
+    ORDER BY salary DESC
+    LIMIT 10
+)
+SELECT 
+performance_rating AS Performance,
+COUNT(employee_id) AS Employee
+FROM highest_payed 
+GROUP BY performance_rating
+ORDER BY Employee DESC;
+
+-- Top 50
+WITH highest_payed AS (
+    SELECT 
+        employee_id,
+        performance_rating
+    FROM hr_database.hr_table
+    ORDER BY salary DESC
+    LIMIT 50
+)
+SELECT 
+performance_rating AS Performance,
+COUNT(employee_id) AS Employee
+FROM highest_payed 
+GROUP BY performance_rating
+ORDER BY Employee DESC;
 
 
+-- Q2) Department with Employes Performance
+
+SELECT 
+    Ex_Department AS Department,
+    CONCAT(ROUND(Excellent_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Excellent_Emp,
+    CONCAT(ROUND(Good_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp) *100,1),"%") AS Good_Emp,
+    CONCAT(ROUND(Satisfactory_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Satisfactory_Emp,
+    CONCAT(ROUND(Needs_Improvement_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Needs_Improvement_Emp,
+    (Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp) AS Total_Emp
+FROM (
+    SELECT 
+        department AS Ex_Department,
+        performance_rating AS Excellent,
+        COUNT(employee_id) AS Excellent_Emp
+    FROM hr_database.hr_table
+    GROUP BY department, performance_rating
+    HAVING performance_rating = "Excellent\r"
+    ORDER BY department ASC
+) ex_table
+LEFT JOIN (
+    SELECT 
+        department AS Go_Department,
+        performance_rating AS Good,
+        COUNT(employee_id) AS Good_Emp
+    FROM hr_database.hr_table
+    GROUP BY department, performance_rating
+    HAVING performance_rating = "Good\r"
+    ORDER BY department ASC
+) go_table
+ON ex_table.Ex_department = go_table.Go_Department
+LEFT JOIN (
+    SELECT 
+        department AS Sa_Department,
+        performance_rating AS Satisfactory,
+    COUNT(employee_id) AS Satisfactory_Emp
+    FROM hr_database.hr_table
+    GROUP BY department, performance_rating
+    HAVING performance_rating = "Satisfactory\r"
+    ORDER BY department ASC
+) sa_table
+ON ex_table.Ex_department = sa_table.Sa_Department
+LEFT JOIN (
+    SELECT 
+        department AS Ni_Department,
+        performance_rating AS Needs_Improvement,
+        COUNT(employee_id) AS Needs_Improvement_Emp
+    FROM hr_database.hr_table
+    GROUP BY department, performance_rating
+    HAVING performance_rating = "Needs Improvement\r"
+    ORDER BY department ASC
+) ni_table
+ON ex_table.Ex_Department = ni_table.Ni_Department
+UNION
+SELECT 
+    'Total_Emp' AS Department,
+    (SELECT 
+        COUNT(employee_id)
+    FROM hr_database.hr_table
+    WHERE performance_rating = "Excellent\r") AS Excellent_Emp,
+    (SELECT 
+        COUNT(employee_id)
+    FROM hr_database.hr_table
+    WHERE performance_rating = "Good\r") AS Good_Emp,
+    (SELECT 
+        COUNT(employee_id)
+    FROM hr_database.hr_table
+    WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp ,
+    (SELECT 
+        COUNT(employee_id)
+    FROM hr_database.hr_table
+    WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp
 
 
+-- Q3) Education Lavel with Employes Performance
+
+SELECT 
+    Ex_Education AS Education,
+    CONCAT(ROUND(Excellent_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Excellent_Emp,
+    CONCAT(ROUND(Good_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp) *100,1),"%") AS Good_Emp,
+    CONCAT(ROUND(Satisfactory_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Satisfactory_Emp,
+    CONCAT(ROUND(Needs_Improvement_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Needs_Improvement_Emp,
+    (Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp) AS Total_Emp
+FROM (
+    SELECT 
+        education_lavel AS Ex_Education,
+        performance_rating AS Excellent,
+        COUNT(employee_id) AS Excellent_Emp
+    FROM hr_database.hr_table
+    GROUP BY education_lavel, performance_rating
+    HAVING performance_rating = "Excellent\r"
+    ORDER BY education_lavel ASC
+) ex_table
+LEFT JOIN (
+    SELECT 
+        education_lavel AS Go_Education,
+        performance_rating AS Good,
+        COUNT(employee_id) AS Good_Emp
+    FROM hr_database.hr_table
+    GROUP BY education_lavel, performance_rating
+    HAVING performance_rating = "Good\r"
+    ORDER BY education_lavel ASC
+) go_table
+ON ex_table.Ex_Education = go_table.Go_Education
+LEFT JOIN (
+    SELECT 
+        education_lavel AS Sa_Education,
+        performance_rating AS Satisfactory,
+        COUNT(employee_id) AS Satisfactory_Emp
+    FROM hr_database.hr_table
+    GROUP BY education_lavel, performance_rating
+    HAVING performance_rating = "Satisfactory\r"
+    ORDER BY education_lavel ASC
+) sa_table
+ON ex_table.Ex_Education = sa_table.Sa_Education
+LEFT JOIN (
+    SELECT 
+        education_lavel AS Ni_Education,
+        performance_rating AS Needs_Improvement,
+        COUNT(employee_id) AS Needs_Improvement_Emp
+    FROM hr_database.hr_table
+    GROUP BY education_lavel, performance_rating
+    HAVING performance_rating = "Needs Improvement\r"
+    ORDER BY education_lavel ASC
+) ni_table
+ON ex_table.Ex_Education = ni_table.Ni_Education
+UNION
+SELECT 
+    'Total_Emp' AS Education,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent\r") AS Excellent_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good\r") AS Good_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp;
+
+
+-- Q4) Gender with Performance 
+
+SELECT 
+    Ex_Gender AS Gender,
+    CONCAT(ROUND(Excellent_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Excellent_Emp,
+    CONCAT(ROUND(Good_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp) *100,1),"%") AS Good_Emp,
+    CONCAT(ROUND(Satisfactory_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Satisfactory_Emp,
+    CONCAT(ROUND(Needs_Improvement_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Needs_Improvement_Emp,
+    (Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp) AS Total_Emp
+FROM (
+    SELECT 
+        gender AS Ex_Gender,
+        performance_rating AS Excellent,
+        COUNT(employee_id) AS Excellent_Emp
+    FROM hr_database.hr_table
+    GROUP BY gender, performance_rating
+    HAVING performance_rating = "Excellent\r"
+    ORDER BY gender ASC
+) ex_table
+LEFT JOIN (
+    SELECT 
+        gender AS Go_Gender,
+        performance_rating AS Good,
+        COUNT(employee_id) AS Good_Emp
+    FROM hr_database.hr_table
+    GROUP BY gender, performance_rating
+    HAVING performance_rating = "Good\r"
+    ORDER BY gender ASC
+) go_table
+ON ex_table.Ex_Gender = go_table.Go_Gender
+LEFT JOIN (
+    SELECT 
+        gender AS Sa_Gender,
+        performance_rating AS Satisfactory,
+        COUNT(employee_id) AS Satisfactory_Emp
+    FROM hr_database.hr_table
+    GROUP BY gender, performance_rating
+    HAVING performance_rating = "Satisfactory\r"
+    ORDER BY gender ASC
+) sa_table
+ON ex_table.Ex_Gender = sa_table.Sa_Gender
+LEFT JOIN (
+    SELECT 
+        gender AS Ni_Gender,
+        performance_rating AS Needs_Improvement,
+        COUNT(employee_id) AS Needs_Improvement_Emp
+    FROM hr_database.hr_table
+    GROUP BY gender, performance_rating
+    HAVING performance_rating = "Needs Improvement\r"
+    ORDER BY gender ASC
+) ni_table
+ON ex_table.Ex_Gender = ni_table.Ni_Gender
+UNION
+SELECT 
+    'Total_Emp' AS Gender,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent\r") AS Excellent_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good\r") AS Good_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp;
