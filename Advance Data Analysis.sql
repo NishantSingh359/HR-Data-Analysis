@@ -502,24 +502,12 @@ ON ex_table.Ex_Department = ni_table.Ni_Department
 UNION
 SELECT 
     'Total_Emp' AS Department,
-    (SELECT 
-        COUNT(employee_id)
-    FROM hr_database.hr_table
-    WHERE performance_rating = "Excellent\r") AS Excellent_Emp,
-    (SELECT 
-        COUNT(employee_id)
-    FROM hr_database.hr_table
-    WHERE performance_rating = "Good\r") AS Good_Emp,
-    (SELECT 
-        COUNT(employee_id)
-    FROM hr_database.hr_table
-    WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp ,
-    (SELECT 
-        COUNT(employee_id)
-    FROM hr_database.hr_table
-    WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent\r") AS Excellent_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good\r") AS Good_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp ,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp
-
+    
 
 -- Q3) Education Lavel with Employes Performance
 
@@ -643,3 +631,8 @@ SELECT
     (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp,
     (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp;
+
+
+-- --------------------------------------------------
+-- ==================================== PART-TO-WHOLE
+-- --------------------------------------------------
