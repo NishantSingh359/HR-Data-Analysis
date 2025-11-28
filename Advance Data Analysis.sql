@@ -638,8 +638,8 @@ SELECT
 -- A part-to-whole ratio is a way of expressing the relationship between a part of something and the entire whole.
 
 -- Q1) Number of Hired Employee (Male & Female) by City.
--- Q2) Citys with Performance.
--- Q3) Citys with Education Lavel
+-- Q2) Citys with Hired Employee Performance.
+-- Q3) Citys with Hired Employee Education Lavel.
 
 
 -- Q1) Number of Hired Employee (Male & Female) by City.
@@ -673,15 +673,111 @@ ON male_table.m_city = female_table.f_city
 ORDER BY Male_Employee DESC;
 
 
--- Q2) Citys with Performance.
+-- Q2) Citys with Hired Employee Performance.
+
+SELECT
+    e_city AS City,
+    CONCAT(ROUND(e_employee/(e_employee + g_employee + s_employee + n_employee)*100,1),"%") AS Excellent,
+    CONCAT(ROUND(g_employee/(e_employee + g_employee + s_employee + n_employee)*100,1),"%") AS Good,
+    CONCAT(ROUND(s_employee/(e_employee + g_employee + s_employee + n_employee)*100,1),"%") AS Satisfaction,
+    CONCAT(ROUND(n_employee/(e_employee + g_employee + s_employee + n_employee)*100,1),"%") AS Needs_Improvement,
+    (e_employee + g_employee + s_employee + n_employee) AS Total_Emp
+FROM (
+    SELECT 
+        city AS e_city,
+        performance_rating AS e_performance,
+        COUNT(employee_id) AS e_employee
+    FROM hr_database.hr_table
+    GROUP BY city, performance_rating
+    HAVING performance_rating = "Excellent\r"
+    ORDER BY city
+) exce_table
+LEFT JOIN (
+    SELECT 
+        city AS g_city,
+        performance_rating AS g_performance,
+        COUNT(employee_id) AS g_employee
+    FROM hr_database.hr_table
+    GROUP BY city, performance_rating
+    HAVING performance_rating = "Good\r"
+    ORDER BY city
+) good_table
+ON exce_table.e_city = good_table.g_city
+LEFT JOIN (
+    SELECT 
+        city AS s_city,
+        performance_rating AS s_performance,
+        COUNT(employee_id) AS s_employee
+    FROM hr_database.hr_table
+    GROUP BY city, performance_rating
+    HAVING performance_rating = "Satisfactory\r"
+    ORDER BY city
+) sati_table
+ON exce_table.e_city = sati_table.s_city
+LEFT JOIN (
+    SELECT 
+        city AS n_city,
+        performance_rating AS n_performance,
+        COUNT(employee_id) AS n_employee
+    FROM hr_database.hr_table
+    GROUP BY city, performance_rating
+    HAVING performance_rating = "Needs Improvement\r"
+    ORDER BY city
+) need_table
+ON exce_table.e_city = need_table.n_city
+ORDER BY Total_Emp DESC
 
 
+-- Q3) Citys with Hired Employee Education Lavel.
 
-
-
-
-
-
-
-
-
+SELECT
+    hs_city AS City,
+    CONCAT(ROUND(hs_employee/(hs_employee + ba_employee + ms_employee + phd_employee)*100,1),"%") AS High_School,
+    CONCAT(ROUND(ba_employee/(hs_employee + ba_employee + ms_employee + phd_employee)*100,1),"%") AS Bachelor,
+    CONCAT(ROUND(ms_employee/(hs_employee + ba_employee + ms_employee + phd_employee)*100,1),"%") AS Master,
+    CONCAT(ROUND(phd_employee/(hs_employee + ba_employee + ms_employee + phd_employee)*100,1),"%") AS Phd,
+    (hs_employee + ba_employee + ms_employee + phd_employee) AS Total_Emp
+FROM (
+    SELECT 
+        city AS hs_city,
+        education_lavel AS hs_education,
+        COUNT(employee_id) AS hs_employee
+    FROM hr_database.hr_table
+    GROUP BY city, education_lavel
+    HAVING hs_education = "High School"
+    ORDER BY city
+) hs_table
+LEFT JOIN (
+    SELECT 
+        city AS ba_city,
+        education_lavel AS ba_education,
+        COUNT(employee_id) AS ba_employee
+    FROM hr_database.hr_table
+    GROUP BY city, education_lavel
+    HAVING ba_education = "Bachelor"
+    ORDER BY city
+) ba_table
+ON hs_table.hs_city = ba_table.ba_city
+LEFT JOIN (
+    SELECT 
+        city AS ms_city,
+        education_lavel AS ms_education,
+        COUNT(employee_id) AS ms_employee
+    FROM hr_database.hr_table
+    GROUP BY city, education_lavel
+    HAVING ms_education = "Master"
+    ORDER BY city
+) ms_table
+ON hs_table.hs_city = ms_table.ms_city
+LEFT JOIN (
+    SELECT 
+        city AS phd_city,
+        education_lavel AS phd_education,
+        COUNT(employee_id) AS phd_employee
+    FROM hr_database.hr_table
+    GROUP BY city, education_lavel
+    HAVING phd_education = "Phd"
+    ORDER BY city
+) phd_table
+ON hs_table.hs_city = phd_table.phd_city
+ORDER BY Total_Emp DESC
