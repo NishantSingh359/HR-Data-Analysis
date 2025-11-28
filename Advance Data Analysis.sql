@@ -307,12 +307,11 @@ ORDER BY Year;
 -- ============================== CUMULATIVE ANALYSIS
 -- --------------------------------------------------
 
-SELECT * FROM hr_database.hr_table;
-
 -- Q1) Cumulative Hired & Terminated Employee by Year
 -- Q2) Cumulative Hire & Terminated Employee by Year & Month
 
 
+SELECT * FROM hr_database.hr_table;
 -- Q1) Cumulative Hired & Terminated Employee by Year
 
 SELECT 
@@ -409,7 +408,7 @@ ON hire_table_two.Hire_Id = terminated_table_two.Terminated_Id
 -- Q2) Department with Employes Performance
 -- Q3) Employes Performance with Education Lavel
 -- Q4) Gender with Performance
-
+-- Q5) Gender with Education Lavel
 
 -- Q1) Top Highest Payed Employes Performance
 
@@ -507,7 +506,7 @@ SELECT
     (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp ,
     (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp
-    
+
 
 -- Q3) Education Lavel with Employes Performance
 
@@ -634,5 +633,55 @@ SELECT
 
 
 -- --------------------------------------------------
--- ==================================== PART-TO-WHOLE
+-- ======================= PART-TO-WHOLE PROPORTIONAL
 -- --------------------------------------------------
+-- A part-to-whole ratio is a way of expressing the relationship between a part of something and the entire whole.
+
+-- Q1) Number of Hired Employee (Male & Female) by City.
+-- Q2) Citys with Performance.
+-- Q3) Citys with Education Lavel
+
+
+-- Q1) Number of Hired Employee (Male & Female) by City.
+
+SELECT 
+    m_city AS City,
+    m_employee AS Male_Employee,
+    f_employee AS Female_Employee,
+    m_employee + f_employee AS Total_Employee
+FROM (
+    SELECT 
+        city AS m_city,
+        gender AS m_gender,
+        COUNT(employee_id) AS m_employee
+    FROM hr_database.hr_table
+    GROUP BY m_city, m_gender
+    HAVING m_gender = "Male"
+    ORDER BY m_city
+) male_table
+LEFT JOIN (
+    SELECT 
+        city AS f_city,
+        gender AS f_gender,
+        COUNT(employee_id) AS f_employee
+    FROM hr_database.hr_table
+    GROUP BY f_city, f_gender
+    HAVING f_gender = "Female"
+    ORDER BY f_city
+) female_table
+ON male_table.m_city = female_table.f_city
+ORDER BY Male_Employee DESC;
+
+
+-- Q2) Citys with Performance.
+
+
+
+
+
+
+
+
+
+
+
