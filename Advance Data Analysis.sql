@@ -781,3 +781,161 @@ LEFT JOIN (
 ) phd_table
 ON hs_table.hs_city = phd_table.phd_city
 ORDER BY Total_Emp DESC
+
+
+-- --------------------------------------------------
+-- ================================ DATA SEGMENTATION
+-- --------------------------------------------------
+
+
+-- 1) Group Employee into Segments Based on Their Working Eperience. 
+-- Employee Experience 
+-- Intern     Intermediate  Mid_lavel  Senior_lavel
+-- 1-2 years  2-4 years     4-8 years  8-10+ years
+
+-- Q2) Group Salary into Categories with Amount Range.
+-- Salary Categories
+-- Low Salary,      Middle Salary,     Upper-Middle Salary  High Salary
+-- $50,000-$70,000  $70,001-$100,000  $1,00,001-$1,30,000  $1,30,001-$1,50,000
+
+-- Q3) Employee Working Experience with Employee Salary.
+
+
+-- 1) Group Employee into Categories on Their Working Eperience. 
+
+WITH table1 AS (
+    SELECT *,
+        CASE
+        WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 0 AND 2 THEN "Intern"
+        WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 2 AND 4 THEN "Intermediate"
+        WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 4 AND 8 THEN "Mid Lavel"
+        WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) > 8 THEN "Senior Lavel"
+        ELSE (YEAR(CURDATE())-1) - YEAR(hiredate)
+        END AS Working_Experience 
+    FROM hr_database.hr_table
+)
+SELECT 
+    Working_Experience,
+    COUNT(employee_id) AS Employees
+FROM table1
+GROUP BY Working_Experience
+ORDER BY Employees DESC;
+
+
+-- Q2) Group Salary into Categories with Amount Range.
+
+WITH table1 AS(
+    SELECT *,
+        CASE
+        WHEN salary BETWEEN 50000 AND 70000 THEN "Low Salary"
+        WHEN salary BETWEEN 70001 AND 100000 THEN "Middle Salary"
+        WHEN salary BETWEEN 100001 AND 130000 THEN "Upper Middle Salary"
+        WHEN salary BETWEEN 130001 AND 150000 THEN "High Salary"
+        ELSE salary
+        END AS salary_category
+    FROM hr_database.hr_table
+) 
+SELECT 
+    salary_category AS Salary_Category,
+    COUNT(employee_id) AS Employees
+FROM table1
+GROUP BY salary_category
+ORDER BY Employees DESC;
+
+
+-- Q3) Employee Working Experience with Employee Salary.
+
+CREATE VIEW emp_exp_slry AS (
+    WITH table1 AS (
+        SELECT *,
+            CASE
+            WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 0 AND 2 THEN "Intern"
+            WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 2 AND 4 THEN "Intermediate"
+            WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 4 AND 8 THEN "Mid Lavel"
+            WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) > 8 THEN "Senior Lavel"
+            ELSE (YEAR(CURDATE())-1) - YEAR(hiredate)
+            END AS working_experience,
+            CASE
+            WHEN salary BETWEEN 50000 AND 70000 THEN "Low Salary"
+            WHEN salary BETWEEN 70001 AND 100000 THEN "Middle Salary"
+            WHEN salary BETWEEN 100001 AND 130000 THEN "Upper Middle Salary"
+            WHEN salary BETWEEN 130001 AND 150000 THEN "High Salary"
+            ELSE salary
+            END AS salary_category 
+        FROM hr_database.hr_table
+    )
+    SELECT * FROM table1
+)
+
+
+SELECT 
+    l_working_experience AS Working_Experience,
+    l_employees AS Low_Salary,
+    m_employees AS Middle_Salary,
+    u_employees AS Upper_Middle_Salary,
+    h_employees AS High_Salary
+FROM (
+    SELECT 
+        working_experience AS l_working_experience,
+        salary_category AS l_salary_category,
+        COUNT(employee_id) AS l_employees
+    FROM emp_exp_slry
+    GROUP BY working_experience, salary_category
+    HAVING l_salary_category = "Low Salary"
+) low_salary_table
+LEFT JOIN (
+    SELECT 
+        working_experience AS m_working_experience,
+        salary_category AS m_salary_category,
+        COUNT(employee_id) AS m_employees
+    FROM emp_exp_slry
+    GROUP BY working_experience, salary_category
+    HAVING m_salary_category = "Middle Salary"
+) middle_salary_table
+ON low_salary_table.l_working_experience = middle_salary_table.m_working_experience
+LEFT JOIN (
+    SELECT 
+        working_experience AS u_working_experience,
+        salary_category AS u_salary_category,
+        COUNT(employee_id) AS u_employees
+    FROM emp_exp_slry
+    GROUP BY working_experience, salary_category
+    HAVING u_salary_category = "Upper Middle Salary"
+) upper_salary_table
+ON low_salary_table.l_working_experience = upper_salary_table.u_working_experience
+LEFT JOIN (
+    SELECT 
+        working_experience AS h_working_experience,
+        salary_category AS h_salary_category,
+        COUNT(employee_id) AS h_employees
+    FROM emp_exp_slry
+    GROUP BY working_experience, salary_category
+    HAVING h_salary_category = "High Salary"
+) high_salary_table
+ON low_salary_table.l_working_experience = high_salary_table.h_working_experience
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
