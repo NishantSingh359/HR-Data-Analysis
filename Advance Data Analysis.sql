@@ -632,6 +632,67 @@ SELECT
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp;
 
 
+-- Q5) Gender with Education Lavel.
+SELECT 
+    Ex_Gender AS Gender,
+    CONCAT(ROUND(HS_Emp/(HS_Emp + BA_Emp + MS_Emp + PHD_Emp)*100,1),"%") AS High_School,
+    CONCAT(ROUND(BA_Emp/(HS_Emp + BA_Emp + MS_Emp + PHD_Emp)*100,1),"%") AS Bachelor,
+    CONCAT(ROUND(MS_Emp/(HS_Emp + BA_Emp + MS_Emp + PHD_Emp)*100,1),"%") AS Master,
+    CONCAT(ROUND(PHD_Emp/(HS_Emp + BA_Emp + MS_Emp + PHD_Emp)*100,1),"%") AS Phd,
+    (HS_Emp + BA_Emp + MS_Emp + PHD_Emp) AS Total_Emp
+FROM (
+    SELECT 
+        gender AS Ex_Gender,
+        education_lavel AS HS_Education,
+        COUNT(employee_id) AS HS_Emp
+    FROM hr_database.hr_table
+    GROUP BY gender, education_lavel
+    HAVING HS_Education = "High School"
+    ORDER BY gender ASC
+) hs_table
+LEFT JOIN (
+    SELECT 
+        gender AS BA_Gender,
+        education_lavel AS BA_Education,
+        COUNT(employee_id) AS BA_Emp
+    FROM hr_database.hr_table
+    GROUP BY gender, education_lavel
+    HAVING BA_Education = "Bachelor"
+    ORDER BY gender ASC
+) ba_table
+ON hs_table.Ex_Gender = ba_table.BA_Gender
+LEFT JOIN (
+    SELECT 
+        gender AS MS_Gender,
+        education_lavel AS MS_Education,
+        COUNT(employee_id) AS MS_Emp
+    FROM hr_database.hr_table
+    GROUP BY gender, education_lavel
+    HAVING MS_Education = "Master"
+    ORDER BY gender ASC
+) ms_table
+ON hs_table.Ex_Gender = ms_table.MS_Gender
+LEFT JOIN (
+    SELECT 
+        gender AS PHD_Gender,
+        education_lavel AS PHD_Education,
+        COUNT(employee_id) AS PHD_Emp
+    FROM hr_database.hr_table
+    GROUP BY gender, education_lavel
+    HAVING PHD_Education = "Phd"
+    ORDER BY gender ASC
+) phd_table
+ON hs_table.Ex_Gender = phd_table.PHD_Gender
+UNION
+SELECT 
+    'Total_Emp' AS Gender,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE education_lavel = "High School") AS High_School,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE education_lavel = "Bachelor") AS Bachelor,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE education_lavel = "Master") AS Master,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE education_lavel = "Phd") AS Phd,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp;
+
+
 -- --------------------------------------------------
 -- ======================= PART-TO-WHOLE PROPORTIONAL
 -- --------------------------------------------------
