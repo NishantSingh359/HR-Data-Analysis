@@ -849,17 +849,17 @@ ORDER BY Total_Emp DESC
 -- --------------------------------------------------
 
 
--- 1) Group Employee into Segments Based on Their Working Eperience. 
+-- 1) Group Employee into Categories Based on Their Working Eperience. 
 -- Employee Experience 
 -- Intern     Intermediate  Mid_lavel  Senior_lavel
 -- 1-2 years  2-4 years     4-8 years  8-10+ years
 
--- Q2) Group Salary into Categories with Amount Range.
+-- Q2) Group Salary into Categories.
 -- Salary Categories
 -- Low Salary,      Middle Salary,     Upper-Middle Salary  High Salary
 -- $50,000-$70,000  $70,001-$100,000  $1,00,001-$1,30,000  $1,30,001-$1,50,000
 
--- Q3) Employee Working Experience with Employee Salary.
+-- Q3) Employee Experience with Salary Category.
 
 
 -- 1) Group Employee into Categories on Their Working Eperience. 
@@ -874,16 +874,23 @@ WITH table1 AS (
         ELSE (YEAR(CURDATE())-1) - YEAR(hiredate)
         END AS Working_Experience 
     FROM hr_database.hr_table
+),
+table2 AS (
+    SELECT 
+        Working_Experience,
+        CONCAT(ROUND(COUNT(employee_id)/(SELECT COUNT(employee_id) FROM hr_database.hr_table)*100,2),"%") AS Employees
+    FROM table1
+    GROUP BY Working_Experience
+    ORDER BY COUNT(employee_id) DESC
 )
-SELECT 
-    Working_Experience,
-    COUNT(employee_id) AS Employees
-FROM table1
-GROUP BY Working_Experience
-ORDER BY Employees DESC;
+SELECT * FROM table2
+UNION
+SELECT
+    "Total Employees" AS Working_Experience,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Employees;
 
 
--- Q2) Group Salary into Categories with Amount Range.
+-- Q2) Group Salary into Categories.
 
 WITH table1 AS(
     SELECT *,
@@ -895,18 +902,26 @@ WITH table1 AS(
         ELSE salary
         END AS salary_category
     FROM hr_database.hr_table
-) 
-SELECT 
-    salary_category AS Salary_Category,
-    COUNT(employee_id) AS Employees
-FROM table1
-GROUP BY salary_category
-ORDER BY Employees DESC;
+),
+table2 AS ( 
+    SELECT 
+        IFNULL(salary_category, "Total Employee") AS Salary_Category,
+        CONCAT(ROUND(COUNT(employee_id)/(SELECT COUNT(employee_id) FROM hr_database.hr_table)*100,2),"%") AS Employees
+    FROM table1
+    GROUP BY salary_category
+    ORDER BY COUNT(employee_id) DESC
+)
+SELECT * FROM table2
+UNION
+SELECT
+    "Total Employees" AS Salary_Category,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Employees;
 
 
--- Q3) Employee Working Experience with Employee Salary.
+-- Q3) Employee Experience with Salary Category.
 
-CREATE VIEW emp_exp_slry AS (
+DROP VIEW IF EXISTS emp_exp_slry;
+CREATE VIEW  emp_exp_slry AS (
     WITH table1 AS (
         SELECT *,
             CASE
@@ -926,15 +941,15 @@ CREATE VIEW emp_exp_slry AS (
         FROM hr_database.hr_table
     )
     SELECT * FROM table1
-)
-
+);
 
 SELECT 
     l_working_experience AS Working_Experience,
     l_employees AS Low_Salary,
     m_employees AS Middle_Salary,
     u_employees AS Upper_Middle_Salary,
-    h_employees AS High_Salary
+    h_employees AS High_Salary,
+    (l_employees + m_employees + u_employees + IFNULL(h_employees,0)) AS Total_Employees
 FROM (
     SELECT 
         working_experience AS l_working_experience,
@@ -974,8 +989,14 @@ LEFT JOIN (
     HAVING h_salary_category = "High Salary"
 ) high_salary_table
 ON low_salary_table.l_working_experience = high_salary_table.h_working_experience
-
-
+UNION
+SELECT 
+"Total Employees" AS Working_Experience,
+(SELECT COUNT(employee_id) FROM emp_exp_slry WHERE salary_category = "Low Salary") AS Low_Salary,
+(SELECT COUNT(employee_id) FROM emp_exp_slry WHERE salary_category = "Middle Salary") AS Middle_Salary,
+(SELECT COUNT(employee_id) FROM emp_exp_slry WHERE salary_category = "Upper Middle Salary") AS Upper_Middle_Salary,
+(SELECT COUNT(employee_id) FROM emp_exp_slry WHERE salary_category = "High Salary") AS High_Salary,
+(SELECT COUNT(employee_id) FROM emp_exp_slry) AS Total_Employees;
 
 
 
