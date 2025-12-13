@@ -47,6 +47,4 @@ termdate = STR_TO_DATE(NULLIF(@termdate,""),"%d/%m/%Y"),
 department = NULLIF(@department,''),
 job_title = NULLIF(@job_title,''),
 salary = NULLIF(@salary,''),
-performance_rating = NULLIF(@performance_rating,'');
-
-
+performance_rating = REPLACE(NULLIF(@performance_rating,''),"\r","");
