@@ -3,10 +3,11 @@
 -- ======================== EXPLORATORY DATA ANALYSIS
 -- ==================================================
 
+-- Project Goal
 -- Explore, Understand and Cover Inside of the Data
 
--- Project Steps
-
+-- ========== PROJECT SETPS
+-- ------------------------
 -- 1) Database & Table Explotation
 -- 2) Dimension Exploration
 -- 3) Date Exploration

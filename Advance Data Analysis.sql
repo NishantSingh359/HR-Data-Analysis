@@ -2,14 +2,17 @@
 -- ============================ ADVANCE DATA ANALYSIS
 -- ==================================================
 
+-- Project Goal
+-- Deep Diving in Data, Analysing Pattern between Dimensions and Measures Using Some Advance Anlytics Steps.
+
 -- ========== PROJECT SETPS
 -- ------------------------
--- CHANGES-OVER-TIME TRENDS
--- CUMULATIVE ANALYSIS
--- PERFORMANCE ANALYSIS
--- PART TO WHOLE
--- DATA SEGMENTATION
--- REPORTING
+-- 7)  CHANGES-OVER-TIME TRENDS
+-- 8)  CUMULATIVE ANALYSIS
+-- 9)  PERFORMANCE ANALYSIS
+-- 10) PART TO WHOLE
+-- 11) DATA SEGMENTATION
+-- 12) REPORTING
 
 
 -- ----------------- USER DEFINE FUCNTION
