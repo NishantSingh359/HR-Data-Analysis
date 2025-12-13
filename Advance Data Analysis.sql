@@ -2,7 +2,17 @@
 -- ============================ ADVANCE DATA ANALYSIS
 -- ==================================================
 
--- USER DEFINE FUCNTION 
+-- ========== PROJECT SETPS
+-- ------------------------
+-- CHANGES-OVER-TIME TRENDS
+-- CUMULATIVE ANALYSIS
+-- PERFORMANCE ANALYSIS
+-- PART TO WHOLE
+-- DATA SEGMENTATION
+-- REPORTING
+
+
+-- ----------------- USER DEFINE FUCNTION
 USE hr_database;
 DELIMITER $$
 CREATE FUNCTION TOMILLION(varia FLOAT)
@@ -17,26 +27,27 @@ BEGIN
     
     RETURN variable;
 END$$
-DELIMITER ;
+DELIMITER;
+-- --------------------------------------
+
 
 -- --------------------------------------------------
 -- ========================== CHANGE-OVER-TIME TRENDS
 -- --------------------------------------------------
 
--- Q1) Hire & Terminated Male & Female Employee by Year
--- Q2) Hired & Terminated Employee by Month
--- Q3) Hired & Terminated Employee by Year & Month
--- Q4) Working Employee Birthday Year
--- Q5) Working Employee Birthday Month
+-- Q1) Hire & Terminated Male & Female Employees by Year
+-- Q2) Hired & Terminated Employees by Month
+-- Q3) Hired & Terminated Employees by Year & Month
+-- Q4) Working Employees Birthday Year
+-- Q5) Working Employees Birthday Month
 -- Q6) Male & Female Contribution in Total Salary by Year
 -- Q7) Male & Female Contribution in Total Salary by Month
 -- Q8) Total Salary by Year & Month
+-- --------------------------------------------------
 
-
-SELECT * FROM hr_database.hr_table;
 
 -- Q1) Hire & Terminated Male & Female Employee by Year
-
+-- ----------------------------------------------------
 SELECT 
     Year,
     Hired_Male,
@@ -46,7 +57,7 @@ SELECT
     Terminated_Female,
     Terminated_Employee
 FROM (
-    -- ==== Hired Employee
+    -- ==== Hired Employees
     SELECT 
         Hire_Year AS Year,
         CONCAT(Round((Hired_Female/Hired_Employee* 100),1),"%") AS Hired_Female,
@@ -83,7 +94,7 @@ FROM (
         ) AS table3
         ON table2.Hire_Year1 = table3.Hire_Year2
     ) table1
-    -- ==== Terminated Employee
+    -- ==== Terminated Employees
 LEFT JOIN (
     SELECT 
         Terminated_Year AS Year1,
@@ -125,8 +136,8 @@ LEFT JOIN (
 ON table1.Year = table2.Year1;
 
 
--- Q2) Hired & Terminated Employee by Month
-
+-- Q2) Hired & Terminated Employees by Month
+-- -----------------------------------------
 SELECT 
 Hire_Month AS Month,
 Hired_Employee,
@@ -150,8 +161,8 @@ ORDER BY Terminated_Month ASC) AS table2
 ON table1.Hire_Month = table2.Terminated_Month
 
 
--- Q3) Hired & Terminated Employee by Year & Month
-
+-- Q3) Hired & Terminated Employees by Year & Month
+-- ------------------------------------------------
 SELECT 
     Hire_Year,
     Hire_Month,
@@ -191,8 +202,8 @@ LEFT JOIN (
 ON hire_table_two.Hire_id = term_table_two.Term_id
 
 
--- Q4) Working Employee Birthday Year
-
+-- Q4) Working Employees Birthday Year
+-- -----------------------------------
 WITH table1 AS (
     SELECT * FROM hr_database.hr_table
     WHERE termdate IS NOT NULL
@@ -203,8 +214,8 @@ FROM table1
 GROUP BY Birthyear;
 
 
--- Q5) Working Employee Birthday Month
-
+-- Q5) Working Employees Birthday Month
+-- ------------------------------------
 WITH table1 AS (
     SELECT * FROM hr_database.hr_table
     WHERE termdate IS NOT NULL
@@ -217,8 +228,7 @@ ORDER BY Birthmonth ASC;
 
 
 -- Q6) Male & Female Contribution in Total Salary by Year
-
-USE hr_database;
+-- ------------------------------------------------------
 SELECT 
 Year,
 CONCAT(Round((Male_Salary/Total_Salary* 100),2),"%") AS Male,
@@ -254,8 +264,7 @@ ON table2.num1 = table3.num2
 
 
 -- Q7) Male & Female Contribution in Total Salary by Month
-
-USE hr_database;
+-- -------------------------------------------------------
 SELECT 
 Month,
 CONCAT(Round((Male_Salary/Total_Salary* 100),2),"%") AS Male,
@@ -293,8 +302,7 @@ SELECT * FROM hr_database.hr_table;
 
 
 -- Q8) Total Salary by Year & Month
-
-USE hr_database;
+-- --------------------------------
 SELECT
 YEAR(hiredate) AS Year,
  MONTH(hiredate) AS Month,
@@ -307,13 +315,13 @@ ORDER BY Year;
 -- ============================== CUMULATIVE ANALYSIS
 -- --------------------------------------------------
 
--- Q1) Cumulative Hired & Terminated Employee by Year
--- Q2) Cumulative Hire & Terminated Employee by Year & Month
+-- Q1) Cumulative Hired & Terminated Employees by Year
+-- Q2) Cumulative Hire & Terminated Employees by Year & Month
+-- --------------------------------------------------
 
 
-SELECT * FROM hr_database.hr_table;
--- Q1) Cumulative Hired & Terminated Employee by Year
-
+-- Q1) Cumulative Hired & Terminated Employees by Year
+-- ---------------------------------------------------
 SELECT 
     Hire_Year AS Year,
     Hire_Employee,
@@ -353,7 +361,7 @@ ON hire_table_two.Hire_Year = term_table_two.Terminated_Year
 
 
 -- Q2) Cumulative Hire & Terminated Employee by Year & Month
-
+-- ---------------------------------------------------------
 SELECT 
     Hire_Year,
     Hire_Month,
@@ -403,17 +411,18 @@ ON hire_table_two.Hire_Id = terminated_table_two.Terminated_Id
 -- ============================= PERFORMANCE ANALYSIS
 -- --------------------------------------------------
 
+-- Q1) Top Highest Payed Employees Performance
+-- Q2) Department by Employees Performance
+-- Q3) Employees Performance by Education Lavel
+-- Q4) Gender by Performance
+-- Q5) Gender by Education Lavel
+-- --------------------------------------------------
+
 
 -- Q1) Top Highest Payed Employes Performance
--- Q2) Department with Employes Performance
--- Q3) Employes Performance with Education Lavel
--- Q4) Gender with Performance
--- Q5) Gender with Education Lavel
-
--- Q1) Top Highest Payed Employes Performance
+-- ------------------------------------------
 
 -- Top 10
-
 WITH highest_payed AS (
     SELECT 
         employee_id,
@@ -446,8 +455,8 @@ GROUP BY performance_rating
 ORDER BY Employee DESC;
 
 
--- Q2) Department with Employes Performance
-
+-- Q2) Department by Employees Performance
+-- ---------------------------------------
 SELECT 
     Ex_Department AS Department,
     CONCAT(ROUND(Excellent_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Excellent_Emp,
@@ -462,7 +471,7 @@ FROM (
         COUNT(employee_id) AS Excellent_Emp
     FROM hr_database.hr_table
     GROUP BY department, performance_rating
-    HAVING performance_rating = "Excellent\r"
+    HAVING performance_rating = "Excellent"
     ORDER BY department ASC
 ) ex_table
 LEFT JOIN (
@@ -472,7 +481,7 @@ LEFT JOIN (
         COUNT(employee_id) AS Good_Emp
     FROM hr_database.hr_table
     GROUP BY department, performance_rating
-    HAVING performance_rating = "Good\r"
+    HAVING performance_rating = "Good"
     ORDER BY department ASC
 ) go_table
 ON ex_table.Ex_department = go_table.Go_Department
@@ -483,7 +492,7 @@ LEFT JOIN (
     COUNT(employee_id) AS Satisfactory_Emp
     FROM hr_database.hr_table
     GROUP BY department, performance_rating
-    HAVING performance_rating = "Satisfactory\r"
+    HAVING performance_rating = "Satisfactory"
     ORDER BY department ASC
 ) sa_table
 ON ex_table.Ex_department = sa_table.Sa_Department
@@ -494,22 +503,22 @@ LEFT JOIN (
         COUNT(employee_id) AS Needs_Improvement_Emp
     FROM hr_database.hr_table
     GROUP BY department, performance_rating
-    HAVING performance_rating = "Needs Improvement\r"
+    HAVING performance_rating = "Needs Improvement"
     ORDER BY department ASC
 ) ni_table
 ON ex_table.Ex_Department = ni_table.Ni_Department
 UNION
 SELECT 
     'Total_Emp' AS Department,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent\r") AS Excellent_Emp,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good\r") AS Good_Emp,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp ,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent") AS Excellent_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good") AS Good_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory") AS Satisfactory_Emp ,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement") AS Needs_Improvement_Emp,
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp
 
 
--- Q3) Education Lavel with Employes Performance
-
+-- Q3) Education Lavel by Employees Performance
+-- --------------------------------------------
 SELECT 
     Ex_Education AS Education,
     CONCAT(ROUND(Excellent_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Excellent_Emp,
@@ -524,7 +533,7 @@ FROM (
         COUNT(employee_id) AS Excellent_Emp
     FROM hr_database.hr_table
     GROUP BY education_lavel, performance_rating
-    HAVING performance_rating = "Excellent\r"
+    HAVING performance_rating = "Excellent"
     ORDER BY education_lavel ASC
 ) ex_table
 LEFT JOIN (
@@ -534,7 +543,7 @@ LEFT JOIN (
         COUNT(employee_id) AS Good_Emp
     FROM hr_database.hr_table
     GROUP BY education_lavel, performance_rating
-    HAVING performance_rating = "Good\r"
+    HAVING performance_rating = "Good"
     ORDER BY education_lavel ASC
 ) go_table
 ON ex_table.Ex_Education = go_table.Go_Education
@@ -545,7 +554,7 @@ LEFT JOIN (
         COUNT(employee_id) AS Satisfactory_Emp
     FROM hr_database.hr_table
     GROUP BY education_lavel, performance_rating
-    HAVING performance_rating = "Satisfactory\r"
+    HAVING performance_rating = "Satisfactory"
     ORDER BY education_lavel ASC
 ) sa_table
 ON ex_table.Ex_Education = sa_table.Sa_Education
@@ -556,22 +565,22 @@ LEFT JOIN (
         COUNT(employee_id) AS Needs_Improvement_Emp
     FROM hr_database.hr_table
     GROUP BY education_lavel, performance_rating
-    HAVING performance_rating = "Needs Improvement\r"
+    HAVING performance_rating = "Needs Improvement"
     ORDER BY education_lavel ASC
 ) ni_table
 ON ex_table.Ex_Education = ni_table.Ni_Education
 UNION
 SELECT 
     'Total_Emp' AS Education,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent\r") AS Excellent_Emp,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good\r") AS Good_Emp,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent") AS Excellent_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good") AS Good_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory") AS Satisfactory_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement") AS Needs_Improvement_Emp,
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp;
 
 
--- Q4) Gender with Performance 
-
+-- Q4) Gender by Performance
+-- -------------------------
 SELECT 
     Ex_Gender AS Gender,
     CONCAT(ROUND(Excellent_Emp/(Excellent_Emp + Good_Emp + Satisfactory_Emp + Needs_Improvement_Emp)*100,1),"%") AS Excellent_Emp,
@@ -586,7 +595,7 @@ FROM (
         COUNT(employee_id) AS Excellent_Emp
     FROM hr_database.hr_table
     GROUP BY gender, performance_rating
-    HAVING performance_rating = "Excellent\r"
+    HAVING performance_rating = "Excellent"
     ORDER BY gender ASC
 ) ex_table
 LEFT JOIN (
@@ -596,7 +605,7 @@ LEFT JOIN (
         COUNT(employee_id) AS Good_Emp
     FROM hr_database.hr_table
     GROUP BY gender, performance_rating
-    HAVING performance_rating = "Good\r"
+    HAVING performance_rating = "Good"
     ORDER BY gender ASC
 ) go_table
 ON ex_table.Ex_Gender = go_table.Go_Gender
@@ -607,7 +616,7 @@ LEFT JOIN (
         COUNT(employee_id) AS Satisfactory_Emp
     FROM hr_database.hr_table
     GROUP BY gender, performance_rating
-    HAVING performance_rating = "Satisfactory\r"
+    HAVING performance_rating = "Satisfactory"
     ORDER BY gender ASC
 ) sa_table
 ON ex_table.Ex_Gender = sa_table.Sa_Gender
@@ -618,21 +627,22 @@ LEFT JOIN (
         COUNT(employee_id) AS Needs_Improvement_Emp
     FROM hr_database.hr_table
     GROUP BY gender, performance_rating
-    HAVING performance_rating = "Needs Improvement\r"
+    HAVING performance_rating = "Needs Improvement"
     ORDER BY gender ASC
 ) ni_table
 ON ex_table.Ex_Gender = ni_table.Ni_Gender
 UNION
 SELECT 
     'Total_Emp' AS Gender,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent\r") AS Excellent_Emp,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good\r") AS Good_Emp,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory\r") AS Satisfactory_Emp,
-    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement\r") AS Needs_Improvement_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Excellent") AS Excellent_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Good") AS Good_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Satisfactory") AS Satisfactory_Emp,
+    (SELECT COUNT(employee_id) FROM hr_database.hr_table WHERE performance_rating = "Needs Improvement") AS Needs_Improvement_Emp,
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Total_Emp;
 
 
--- Q5) Gender with Education Lavel.
+-- Q5) Gender by Education Lavel
+-- -----------------------------
 SELECT 
     Ex_Gender AS Gender,
     CONCAT(ROUND(HS_Emp/(HS_Emp + BA_Emp + MS_Emp + PHD_Emp)*100,1),"%") AS High_School,
@@ -698,13 +708,14 @@ SELECT
 -- --------------------------------------------------
 -- A part-to-whole ratio is a way of expressing the relationship between a part of something and the entire whole.
 
--- Q1) Number of Hired Employee (Male & Female) by City.
--- Q2) Citys with Hired Employee Performance.
--- Q3) Citys with Hired Employee Education Lavel.
+-- Q1) Number of Hired Employees (Male & Female) by Cities
+-- Q2) Cities by Hired Employees Performance
+-- Q3) Cities by Hired Employees Education Lavel
+-- --------------------------------------------------
 
 
--- Q1) Number of Hired Employee (Male & Female) by City.
-
+-- Q1) Number of Hired Employees (Male & Female) by Cities
+-- -------------------------------------------------------
 SELECT 
     m_city AS City,
     m_employee AS Male_Employee,
@@ -734,8 +745,8 @@ ON male_table.m_city = female_table.f_city
 ORDER BY Male_Employee DESC;
 
 
--- Q2) Citys with Hired Employee Performance.
-
+-- Q2) Cities by Hired Employees Performance
+-- -----------------------------------------
 SELECT
     e_city AS City,
     CONCAT(ROUND(e_employee/(e_employee + g_employee + s_employee + n_employee)*100,1),"%") AS Excellent,
@@ -750,7 +761,7 @@ FROM (
         COUNT(employee_id) AS e_employee
     FROM hr_database.hr_table
     GROUP BY city, performance_rating
-    HAVING performance_rating = "Excellent\r"
+    HAVING performance_rating = "Excellent"
     ORDER BY city
 ) exce_table
 LEFT JOIN (
@@ -760,7 +771,7 @@ LEFT JOIN (
         COUNT(employee_id) AS g_employee
     FROM hr_database.hr_table
     GROUP BY city, performance_rating
-    HAVING performance_rating = "Good\r"
+    HAVING performance_rating = "Good"
     ORDER BY city
 ) good_table
 ON exce_table.e_city = good_table.g_city
@@ -771,7 +782,7 @@ LEFT JOIN (
         COUNT(employee_id) AS s_employee
     FROM hr_database.hr_table
     GROUP BY city, performance_rating
-    HAVING performance_rating = "Satisfactory\r"
+    HAVING performance_rating = "Satisfactory"
     ORDER BY city
 ) sati_table
 ON exce_table.e_city = sati_table.s_city
@@ -782,15 +793,15 @@ LEFT JOIN (
         COUNT(employee_id) AS n_employee
     FROM hr_database.hr_table
     GROUP BY city, performance_rating
-    HAVING performance_rating = "Needs Improvement\r"
+    HAVING performance_rating = "Needs Improvement"
     ORDER BY city
 ) need_table
 ON exce_table.e_city = need_table.n_city
 ORDER BY Total_Emp DESC
 
 
--- Q3) Citys with Hired Employee Education Lavel.
-
+-- Q3) Cities by Hired Employees Education Lavel
+-- ---------------------------------------------
 SELECT
     hs_city AS City,
     CONCAT(ROUND(hs_employee/(hs_employee + ba_employee + ms_employee + phd_employee)*100,1),"%") AS High_School,
@@ -848,30 +859,30 @@ ORDER BY Total_Emp DESC
 -- ================================ DATA SEGMENTATION
 -- --------------------------------------------------
 
-
--- 1) Group Employee into Categories Based on Their Working Eperience. 
--- Employee Experience 
+-- 1) Group Employees into Categories Based on Their Working Eperience
+-- Employees Experience 
 -- Intern     Intermediate  Mid_lavel  Senior_lavel
 -- 1-2 years  2-4 years     4-8 years  8-10+ years
 
--- Q2) Group Salary into Categories.
+-- Q2) Group Salary by Categories
 -- Salary Categories
 -- Low Salary,      Middle Salary,     Upper-Middle Salary  High Salary
 -- $50,000-$70,000  $70,001-$100,000  $1,00,001-$1,30,000  $1,30,001-$1,50,000
 
--- Q3) Employee Experience with Salary Category.
+-- Q3) Employees Experience by Salary Category
+-- --------------------------------------------------
 
 
--- 1) Group Employee into Categories on Their Working Eperience. 
-
+-- 1) Group Employees into Categories on Their Working Eperience
+-- -------------------------------------------------------------
 WITH table1 AS (
     SELECT *,
         CASE
-        WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 0 AND 2 THEN "Intern"
-        WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 2 AND 4 THEN "Intermediate"
-        WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 4 AND 8 THEN "Mid Lavel"
-        WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) > 8 THEN "Senior Lavel"
-        ELSE (YEAR(CURDATE())-1) - YEAR(hiredate)
+        WHEN YEAR(CURDATE()) - YEAR(hiredate) BETWEEN 0 AND 2 THEN "Intern"
+        WHEN YEAR(CURDATE()) - YEAR(hiredate) BETWEEN 2 AND 4 THEN "Intermediate"
+        WHEN YEAR(CURDATE()) - YEAR(hiredate) BETWEEN 4 AND 8 THEN "Mid Lavel"
+        WHEN YEAR(CURDATE()) - YEAR(hiredate) > 8 THEN "Senior Lavel"
+        ELSE YEAR(CURDATE()) - YEAR(hiredate)
         END AS Working_Experience 
     FROM hr_database.hr_table
 ),
@@ -890,8 +901,8 @@ SELECT
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Employees;
 
 
--- Q2) Group Salary into Categories.
-
+-- Q2) Group Salary by Categories
+-- ------------------------------
 WITH table1 AS(
     SELECT *,
         CASE
@@ -918,18 +929,18 @@ SELECT
     (SELECT COUNT(employee_id) FROM hr_database.hr_table) AS Employees;
 
 
--- Q3) Employee Experience with Salary Category.
-
+-- Q3) Employees Experience by Salary Category
+-- -------------------------------------------
 DROP VIEW IF EXISTS emp_exp_slry;
 CREATE VIEW  emp_exp_slry AS (
     WITH table1 AS (
         SELECT *,
             CASE
-            WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 0 AND 2 THEN "Intern"
-            WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 2 AND 4 THEN "Intermediate"
-            WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) BETWEEN 4 AND 8 THEN "Mid Lavel"
-            WHEN (YEAR(CURDATE())-1) - YEAR(hiredate) > 8 THEN "Senior Lavel"
-            ELSE (YEAR(CURDATE())-1) - YEAR(hiredate)
+            WHEN YEAR(CURDATE()) - YEAR(hiredate) BETWEEN 0 AND 2 THEN "Intern"
+            WHEN YEAR(CURDATE()) - YEAR(hiredate) BETWEEN 2 AND 4 THEN "Intermediate"
+            WHEN YEAR(CURDATE()) - YEAR(hiredate) BETWEEN 4 AND 8 THEN "Mid Lavel"
+            WHEN YEAR(CURDATE()) - YEAR(hiredate) > 8 THEN "Senior Lavel"
+            ELSE YEAR(CURDATE()) - YEAR(hiredate)
             END AS working_experience,
             CASE
             WHEN salary BETWEEN 50000 AND 70000 THEN "Low Salary"
@@ -999,20 +1010,77 @@ SELECT
 (SELECT COUNT(employee_id) FROM emp_exp_slry) AS Total_Employees;
 
 
+-- --------------------------------------------------
+-- ======================================== REPORTING
+-- --------------------------------------------------
+
+-- Q1) Create Working Employees Report
+-- Q2) Create Terminated Employees Report
+-- --------------------------------------------------
 
 
+-- Q1) Create Working Employees Report
+-- -----------------------------------
+SELECT
+    employee_id AS Employee_Id,
+    CONCAT_WS(" ",first_name, last_name) AS Name,
+    gender AS Gender,
+    CONCAT_WS(" ",(YEAR(CURDATE())-1) - YEAR(birthdate), "Years") AS Age,
+    birthdate AS Birth_Date,
+    education_lavel AS Education,
+    city AS City,
+    state AS State,
+    hiredate AS Hire_Date,
+    job_title AS Job,
+    department AS Department,
+    CASE
+        WHEN ((YEAR(CURDATE()) - YEAR(hiredate)) = 0) THEN CONCAT_WS(" ",(MONTH(CURDATE()) - MONTH(hiredate)), "Months")
+        ELSE CONCAT_WS(" ",(YEAR(CURDATE()) - YEAR(hiredate)), "Years")
+    END AS Experience,
+    performance_rating AS Performance,
+    CASE
+            WHEN salary BETWEEN 50000 AND 70000 THEN "Low Salary"
+            WHEN salary BETWEEN 70001 AND 100000 THEN "Middle Salary"
+            WHEN salary BETWEEN 100001 AND 130000 THEN "Upper Middle Salary"
+            WHEN salary BETWEEN 130001 AND 150000 THEN "High Salary"
+            ELSE salary
+    END AS Salary_Category,
+    salary AS Salary
+FROM hr_database.hr_table
+WHERE termdate IS NULL;
 
 
-
-
-
-
-
-
-
-
-
-
+-- Q2) Create Terminated Employees Report
+-- --------------------------------------
+SELECT
+    employee_id AS Employee_Id,
+    CONCAT_WS(" ",first_name, last_name) AS Name,
+    gender AS Gender,
+    CONCAT_WS(" ",(YEAR(CURDATE())-1) - YEAR(birthdate), "Years") AS Current_Age,
+    birthdate AS Birth_Date,
+    education_lavel AS Education,
+    city AS City,
+    state AS State,
+    hiredate AS Hire_Date,
+    termdate AS Terminated_Date,
+    CONCAT_WS(" ",(YEAR(termdate) - YEAR(birthdate)), "Years") AS Terminated_Age,
+    job_title AS Job,
+    department AS Department,
+    CASE
+        WHEN (YEAR(termdate) - YEAR(hiredate)) = 0 THEN CONCAT_WS(" ",(MONTH(termdate) - MONTH(hiredate)), "Months")
+        ELSE CONCAT_WS(" ",(YEAR(termdate) - YEAR(hiredate)), "Years")
+    END AS Experience,
+    performance_rating AS Performance,
+    CASE
+        WHEN salary BETWEEN 50000 AND 70000 THEN "Low Salary"
+        WHEN salary BETWEEN 70001 AND 100000 THEN "Middle Salary"
+        WHEN salary BETWEEN 100001 AND 130000 THEN "Upper Middle Salary"
+        WHEN salary BETWEEN 130001 AND 150000 THEN "High Salary"
+        ELSE salary
+    END AS Salary_Category,
+    salary AS Salary
+FROM hr_database.hr_table
+WHERE termdate IS NOT NULL;
 
 
 
