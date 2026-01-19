@@ -40,16 +40,20 @@ HR-PROJECT <br>
    - Loaded CSV data into MySQL
 
 2. **Exploratory Data Analysis (EDA)**
-   - Employee count
-   - Department distribution
-   - Gender and age analysis
-   - Attrition overview
+    - 1 Database & Table Explotation
+    - 2 Dimension Exploration
+    - 3 Date Exploration
+    - 4 Measures Exploration
+    - 5 Magnitude Analysis
+    - 6 Ranking Analysis
 
 3. **Advanced Data Analysis**
-   - Attrition by department, job role, and age
-   - Salary and performance trends
-   - Experience vs attrition
-   - Business-driven HR questions
+    - 7  CHANGES-OVER-TIME TRENDS
+    - 8  CUMULATIVE ANALYSIS
+    - 9  PERFORMANCE ANALYSIS
+    - 10 PART TO WHOLE
+    - 11 DATA SEGMENTATION
+    - 12 REPORTING
 
 ---
 
