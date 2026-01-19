@@ -64,7 +64,7 @@ HR-PROJECT <br>
 ## 📈 Final Outcome
 This project demonstrates:
 - Strong SQL fundamentals
-- Analytical thinking (vishleshan soch)
+- Analytical thinking
 - Ability to convert raw HR data into business insights
 
 ---
