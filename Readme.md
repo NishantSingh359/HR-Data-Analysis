@@ -3,26 +3,43 @@
 ## 📌 Project Overview
 This project focuses on analyzing **Human Resources (HR) data** using **MySQL** to extract meaningful business insights related to employees, attrition, performance, and demographics.
 
-The goal is to practice **SQL querying, data exploration, and advanced analysis** in a real-world HR dataset.
-
 ---
 
 ## 📂 Project Structure
 
-HR-PROJECT <br>
-│ <br>
-├── data <br>
-│ └── HumanResources.csv <br>
-│ <br>
-├── src <br>
-│ ├── 01_create_load_tables.sql <br>
-│ ├── 02_eda.sql <br>
-│ └── 03_advanced_analysis.sql <br>
-│ <br>
-├── results <br>
-│ └── insights.md <br>
-│ <br>
-└── README.md <br>
+hr-analytics-project/
+│
+├── data/                     
+│   └── human_resources.csv        
+│
+├── sql/
+│   ├── 01_eda/              
+│   │   ├── 01_database_overview.sql
+│   │   ├── 02_dimension_analysis.sql
+│   │   ├── 03_date_analysis.sql
+│   │   ├── 04_measure_analysis.sql
+│   │   ├── 05_magnitude_analysis.sql
+│   │   └── 06_ranking_analysis.sql
+│   │
+│   ├── 02_analysis/          
+│   │   ├── 01_hiring_trends.sql
+│   │   ├── 02_cumulative_analysis.sql
+│   │   ├── 03_performance_analysis.sql
+│   │   ├── 04_part_to_whole.sql
+│   │   └── 05_segmentation.sql
+│   │
+│   ├── 03_reporting/           
+│   │   └── 01_final_report.sql
+│   │
+│   └── utils/                 
+│       └── common.sql
+│
+├── reports/
+│   └── insights.md             
+│
+├── .gitignore
+└── README.md
+
 
 ---
 
@@ -40,7 +57,7 @@ HR-PROJECT <br>
    - Loaded CSV data into MySQL
 
 2. **Exploratory Data Analysis (EDA)**
-    - 1 Database & Table Explotation
+    - 1 Database & Table Exploration
     - 2 Dimension Exploration
     - 3 Date Exploration
     - 4 Measures Exploration
@@ -48,21 +65,24 @@ HR-PROJECT <br>
     - 6 Ranking Analysis
 
 3. **Advanced Data Analysis**
-    - 7  CHANGES-OVER-TIME TRENDS
-    - 8  CUMULATIVE ANALYSIS
-    - 9  PERFORMANCE ANALYSIS
-    - 10 PART TO WHOLE
-    - 11 DATA SEGMENTATION
-    - 12 REPORTING
+    - 1 Hiring Trends
+    - 2 Cumulative Analysis
+    - 3 Performance Analysis
+    - 4 Part to Whole
+    - 5 Data Segmentation
+    - 6 Reporting
 
 ---
 
 ## 📊 Key Business Questions Answered
 - Which departments have the highest attrition?
+- Top 10 highest paid employees performances?
 - Does salary affect employee attrition?
 - What age group leaves the company most?
-- Is experience linked to employee retention?
-
+- Which year we hired highest employees?
+- Is higher educated employees perform better?
+- Which department of employees perform better?
+- Is higher experience employees gets higher salary?
 ---
 
 ## 📈 Final Outcome

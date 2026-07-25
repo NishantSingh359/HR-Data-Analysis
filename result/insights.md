@@ -2,19 +2,23 @@
 
 ## 👥 Workforce Overview
 - The organization has employees across multiple departments with varied experience levels.
-- Majority of employees fall in the mid-age group (25–40 years).
+- Majority of employees fall in the mid-age group (25–44 years).
 
 ---
-
+## Performance Analysis
+- **Sales**, **Finance** and **Operation** department employees perform better than rest departments of employees.
+- **Higher Educated** effect employees performance, High educated employees perform better. 
+- **High Paid** employees perform also better.
+---
 ## 🚪 Attrition Analysis
-- Attrition is **higher among early-career employees**.
-- Certain departments show **consistently higher attrition**, indicating possible workload or management issues.
+- Attrition is higher among **Young Professional** *(25-44) years* and **Middle Aged** *(45-64) Years* employees**.
+- **Operations** departments show higher attrition, indicating possible workload or management issues.
 
 ---
 
 ## 💰 Salary & Attrition
 - Employees with **lower salary slabs** tend to leave more frequently.
-- Competitive compensation plays an important role in employee retention (rok ke rakhna).
+- Competitive compensation plays an important role in employee retention.
 
 ---
 
