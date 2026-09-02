@@ -1,13 +1,13 @@
--- Active: 1758763009265@@127.0.0.1@3306@hr_database
+-- Active: 1787190722762@@127.0.0.1@3306@bronze
 
 -- Create Database
 ------------------
-DROP DATABASE IF EXISTS hr_database;
-CREATE DATABASE hr_database;
+DROP DATABASE IF EXISTS Human_Resource;
+CREATE DATABASE Human_Resource;
 
 -- Create Table
 ---------------
-CREATE TABLE hr_database.hr_table(
+CREATE TABLE Human_Resource.data(
     employee_id VARCHAR(70),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
@@ -23,12 +23,12 @@ CREATE TABLE hr_database.hr_table(
     salary FLOAT,
     performance_rating VARCHAR(50)
 );
-SHOW VARIABLES LIKE "secure_file_priv";
+
 -- Load Data
 ------------
-TRUNCATE TABLE hr_database.hr_table;
-LOAD DATA local INFILE 'C:/Users/TUF/OneDrive/Documents/Code/MY SQL/HR-Project/data/HumanResource.csv'
-INTO TABLE hr_database.hr_table
+TRUNCATE TABLE Human_Resource.Data;
+LOAD DATA local INFILE 'C:/Users/Nishant/Documents/Code/Projects/HR-Project/data/HumanResource.csv'
+INTO TABLE Human_Resource.Data
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -49,3 +49,5 @@ department = NULLIF(@department,''),
 job_title = NULLIF(@job_title,''),
 salary = NULLIF(@salary,''),
 performance_rating = REPLACE(NULLIF(@performance_rating,''),"\r","");
+
+

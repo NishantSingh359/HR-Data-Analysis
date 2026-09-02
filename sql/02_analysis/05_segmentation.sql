@@ -35,12 +35,12 @@ WITH table1 AS (
             WHEN YEAR(CURDATE()) - YEAR(hiredate) > 8             THEN 'Senior Level'
             ELSE YEAR(CURDATE()) - YEAR(hiredate)
         END AS working_experience
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     WHERE termdate IS NULL
 )
 SELECT
     working_experience,
-    CONCAT(ROUND(COUNT(employee_id) / (SELECT COUNT(employee_id) FROM hr_database.hr_table) * 100, 2), '%') AS employees
+    CONCAT(ROUND(COUNT(employee_id) / (SELECT COUNT(employee_id) FROM Human_Resource.Data) * 100, 2), '%') AS employees
 FROM table1
 GROUP BY working_experience
 ORDER BY COUNT(employee_id) DESC;
@@ -59,7 +59,7 @@ WITH table1 AS (
             WHEN YEAR(CURDATE()) - YEAR(birthdate) > 64             THEN 'Seniors'
             ELSE YEAR(CURDATE()) - YEAR(birthdate)
         END AS working_experience
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     WHERE termdate IS NOT NULL
 )
 SELECT
@@ -83,7 +83,7 @@ WITH table1 AS (
             WHEN YEAR(CURDATE()) - YEAR(birthdate) > 64             THEN 'Seniors'
             ELSE YEAR(CURDATE()) - YEAR(birthdate)
         END AS working_experience
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     WHERE termdate IS NULL
 )
 SELECT
@@ -108,12 +108,12 @@ WITH table1 AS (
             WHEN salary BETWEEN 130001 AND 150000 THEN 'High Salary'
             ELSE salary
         END AS salary_category
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     WHERE termdate IS NULL
 )
 SELECT
     salary_category,
-    CONCAT(ROUND(COUNT(employee_id) / (SELECT COUNT(employee_id) FROM hr_database.hr_table) * 100, 2), '%') AS employees
+    CONCAT(ROUND(COUNT(employee_id) / (SELECT COUNT(employee_id) FROM Human_Resource.Data) * 100, 2), '%') AS employees
 FROM table1
 GROUP BY salary_category
 ORDER BY COUNT(employee_id) DESC;
@@ -131,7 +131,7 @@ WITH table1 AS (
             WHEN salary BETWEEN 130001 AND 150000 THEN 'High Salary'
             ELSE salary
         END AS salary_category
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     WHERE termdate IS NOT NULL
 )
 SELECT
@@ -162,7 +162,7 @@ WITH table1 AS (
             WHEN salary BETWEEN 130001 AND 150000 THEN 'High Salary'
             ELSE salary
         END AS salary_category
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
 )
 SELECT
     working_experience,

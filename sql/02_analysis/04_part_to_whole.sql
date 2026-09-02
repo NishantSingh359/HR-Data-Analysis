@@ -19,7 +19,7 @@ SELECT
     CONCAT(ROUND(100 * COUNT(CASE WHEN gender = 'Male'   THEN 1 END) / COUNT(*), 1), '%') AS male,
     CONCAT(ROUND(100 * COUNT(CASE WHEN gender = 'Female' THEN 1 END) / COUNT(*), 1), '%') AS female,
     COUNT(*) AS total_emp
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 GROUP BY city
 ORDER BY total_emp DESC;
 
@@ -32,7 +32,7 @@ WITH table1 AS (
     SELECT
         city,
         performance_rating
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     WHERE termdate IS NULL
 )
 SELECT
@@ -58,6 +58,6 @@ SELECT
     CONCAT(ROUND(100 * COUNT(CASE WHEN education_level = 'Bachelor'    THEN 1 END) / COUNT(*), 1), '%') AS bachelor,
     CONCAT(ROUND(100 * COUNT(CASE WHEN education_level = 'High School' THEN 1 END) / COUNT(*), 1), '%') AS high_school,
     COUNT(*) AS total_emp
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 GROUP BY city
 ORDER BY total_emp DESC;

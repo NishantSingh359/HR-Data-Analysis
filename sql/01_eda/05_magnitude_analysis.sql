@@ -18,8 +18,8 @@
 SELECT
     gender,
     FORMAT_NUMBER(SUM(salary))                                         AS total_salary,
-    ROUND(SUM(salary) / (SELECT SUM(salary) FROM hr_database.hr_table) * 100, 1) AS per_salary
-FROM hr_database.hr_table
+    ROUND(SUM(salary) / (SELECT SUM(salary) FROM Human_Resource.Data) * 100, 1) AS per_salary
+FROM Human_Resource.Data
 GROUP BY gender
 ORDER BY per_salary DESC;
 
@@ -31,8 +31,8 @@ ORDER BY per_salary DESC;
 SELECT
     education_level,
     FORMAT_NUMBER(SUM(salary))                                         AS total_salary,
-    ROUND(SUM(salary) / (SELECT SUM(salary) FROM hr_database.hr_table) * 100, 1) AS per_salary
-FROM hr_database.hr_table
+    ROUND(SUM(salary) / (SELECT SUM(salary) FROM Human_Resource.Data) * 100, 1) AS per_salary
+FROM Human_Resource.Data
 GROUP BY education_level
 ORDER BY per_salary DESC;
 
@@ -44,8 +44,8 @@ ORDER BY per_salary DESC;
 SELECT
     performance_rating,
     FORMAT_NUMBER(SUM(salary))                                         AS total_salary,
-    ROUND(SUM(salary) / (SELECT SUM(salary) FROM hr_database.hr_table) * 100, 1) AS per_salary
-FROM hr_database.hr_table
+    ROUND(SUM(salary) / (SELECT SUM(salary) FROM Human_Resource.Data) * 100, 1) AS per_salary
+FROM Human_Resource.Data
 GROUP BY performance_rating
 ORDER BY per_salary DESC;
 
@@ -57,8 +57,8 @@ ORDER BY per_salary DESC;
 SELECT
     department,
     FORMAT_NUMBER(SUM(salary))                                         AS total_salary,
-    ROUND(SUM(salary) / (SELECT SUM(salary) FROM hr_database.hr_table) * 100, 1) AS per_salary
-FROM hr_database.hr_table
+    ROUND(SUM(salary) / (SELECT SUM(salary) FROM Human_Resource.Data) * 100, 1) AS per_salary
+FROM Human_Resource.Data
 GROUP BY department
 ORDER BY per_salary DESC;
 
@@ -70,8 +70,8 @@ ORDER BY per_salary DESC;
 SELECT
     job_title,
     FORMAT_NUMBER(SUM(salary))                                         AS total_salary,
-    ROUND(SUM(salary) / (SELECT SUM(salary) FROM hr_database.hr_table) * 100, 2) AS per_salary
-FROM hr_database.hr_table
+    ROUND(SUM(salary) / (SELECT SUM(salary) FROM Human_Resource.Data) * 100, 2) AS per_salary
+FROM Human_Resource.Data
 GROUP BY job_title
 ORDER BY per_salary DESC;
 
@@ -83,8 +83,8 @@ ORDER BY per_salary DESC;
 SELECT
     city,
     FORMAT_NUMBER(SUM(salary))                                         AS total_salary,
-    ROUND(SUM(salary) / (SELECT SUM(salary) FROM hr_database.hr_table) * 100, 2) AS per_salary
-FROM hr_database.hr_table
+    ROUND(SUM(salary) / (SELECT SUM(salary) FROM Human_Resource.Data) * 100, 2) AS per_salary
+FROM Human_Resource.Data
 GROUP BY city
 ORDER BY per_salary DESC;
 
@@ -96,7 +96,7 @@ ORDER BY per_salary DESC;
 SELECT
     state,
     FORMAT_NUMBER(SUM(salary))                                         AS total_salary,
-    ROUND(SUM(salary) / (SELECT SUM(salary) FROM hr_database.hr_table) * 100, 2) AS per_salary
-FROM hr_database.hr_table
+    ROUND(SUM(salary) / (SELECT SUM(salary) FROM Human_Resource.Data) * 100, 2) AS per_salary
+FROM Human_Resource.Data
 GROUP BY state
 ORDER BY per_salary DESC;

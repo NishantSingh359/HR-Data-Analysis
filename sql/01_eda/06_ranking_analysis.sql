@@ -11,7 +11,7 @@ SELECT
     CONCAT_WS(' ', first_name, last_name)  AS employee_name,
     FORMAT_NUMBER(salary)                  AS salary,
     DENSE_RANK() OVER (ORDER BY salary DESC) AS rank
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 LIMIT 10;
 
 
@@ -23,7 +23,7 @@ WITH table1 AS (
     SELECT
         YEAR(hiredate)     AS year,
         COUNT(employee_id) AS hired_employees
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     GROUP BY year
 )
 SELECT
@@ -41,7 +41,7 @@ WITH table1 AS (
     SELECT
         YEAR(termdate)     AS year,
         COUNT(employee_id) AS fired_employees
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     GROUP BY year
     HAVING year IS NOT NULL
 )

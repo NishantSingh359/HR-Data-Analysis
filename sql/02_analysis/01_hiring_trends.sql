@@ -83,7 +83,7 @@ SELECT
     DATE_FORMAT(birthdate, '%m-%d')       AS birthdate
 FROM (
     SELECT *
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     WHERE termdate IS NULL
 ) AS a
 WHERE MONTH(birthdate) = MONTH(CURRENT_DATE())
@@ -99,7 +99,7 @@ SELECT
     ROUND(100 * SUM(CASE WHEN gender = 'Male'   THEN salary END) / SUM(salary), 1) AS male,
     ROUND(100 * SUM(CASE WHEN gender = 'Female' THEN salary END) / SUM(salary), 1) AS female,
     FORMAT_NUMBER(SUM(salary))                                              AS total_salary
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 GROUP BY years
 ORDER BY years;
 

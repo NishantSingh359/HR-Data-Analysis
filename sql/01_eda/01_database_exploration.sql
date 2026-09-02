@@ -22,4 +22,4 @@ SELECT DATABASE();
 SHOW TABLES;
 
 -- Show Table Structure
-DESCRIBE hr_database.hr_table;
+DESCRIBE Human_Resource.Data;

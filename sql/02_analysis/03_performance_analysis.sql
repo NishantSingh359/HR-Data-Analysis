@@ -19,7 +19,7 @@ SELECT
     department,
     performance_rating,
     FORMAT_NUMBER(salary)                 AS salary
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 ORDER BY salary DESC
 LIMIT 10;
 
@@ -35,7 +35,7 @@ SELECT
     CONCAT(ROUND(100 * COUNT(CASE WHEN performance_rating = 'Satisfactory'      THEN 1 END) / COUNT(*), 1), '%') AS satisfactory,
     CONCAT(ROUND(100 * COUNT(CASE WHEN performance_rating = 'Needs Improvement' THEN 1 END) / COUNT(*), 1), '%') AS needs_improvement,
     COUNT(*) AS total_emp
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 GROUP BY department;
 
 
@@ -50,7 +50,7 @@ SELECT
     ROUND(100 * COUNT(CASE WHEN performance_rating = 'Satisfactory'      THEN 1 END) / COUNT(*), 1) AS satisfactory,
     ROUND(100 * COUNT(CASE WHEN performance_rating = 'Needs Improvement' THEN 1 END) / COUNT(*), 1) AS needs_improvement,
     COUNT(*) AS total_emp
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 GROUP BY education_level
 ORDER BY excellent DESC;
 
@@ -65,7 +65,7 @@ SELECT
     CONCAT(ROUND(100 * COUNT(CASE WHEN performance_rating = 'Satisfactory'      THEN 1 END) / COUNT(*), 1), '%') AS satisfactory,
     CONCAT(ROUND(100 * COUNT(CASE WHEN performance_rating = 'Needs Improvement' THEN 1 END) / COUNT(*), 1), '%') AS needs_improvement,
     COUNT(*) AS total_emp
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 GROUP BY gender;
 
 
@@ -75,7 +75,7 @@ GROUP BY gender;
 
 WITH table1 AS(
     SELECT *
-    FROM hr_database.hr_table
+    FROM Human_Resource.Data
     WHERE termdate IS NOT NULL
 )
 SELECT 

@@ -36,7 +36,7 @@ SELECT
         ELSE salary
     END                                                  AS salary_category,
     salary                                               AS salary
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 WHERE termdate IS NULL;
 
 
@@ -72,5 +72,5 @@ SELECT
         ELSE salary
     END                                                  AS salary_category,
     salary                                               AS salary
-FROM hr_database.hr_table
+FROM Human_Resource.Data
 WHERE termdate IS NOT NULL;

@@ -1,6 +1,5 @@
 -- ----------------- USER DEFINE FUCNTION
-USE hr_database;
-
+USE Human_Resource;
 DROP FUNCTION FORMAT_NUMBER;
 DELIMITER $$
 CREATE FUNCTION FORMAT_NUMBER(varia FLOAT)
